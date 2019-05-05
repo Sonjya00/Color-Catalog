@@ -1,0 +1,12 @@
+{% extends "main.html" %} {% include "header.html" %} {% block content %}
+<h1>Edit {{ category.name }}</h1>
+<form
+  action="{{ url_for('editCategory',category_id = category.id)}}"
+  method="post"
+>
+  <label for="name">Name:</label>
+  <input type="text" name="name" value="{{ category.name }}" />
+  <button type="submit" id="submit">Save</button>
+  <a href="{{ url_for('showCategories') }}">Cancel</a>
+</form>
+{% endblock %}

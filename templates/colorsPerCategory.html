@@ -1,0 +1,17 @@
+{% extends "main.html" %} {% include "header.html" %} {% block content %}
+<h1>{{ category.name }}</h1>
+<p>Created by {{ category.user.name }}, {{ category.user.id }}</p>
+<p>See below all the colors for {{ category.name }}</p>
+{% if colors !=[] %}
+<ul>
+  {% for i in colors %}
+  <li class="color-item">
+    <h2 class="color-item-name">{{ i.name }}</h2>
+    <p>{{ i.hex_code }}</p>
+    <p>{{ i.rgb_code }}</p>
+    <p style="background-color:{{ i.hex_code }}; height: 20px; width: 20px"></p>
+    <p>Added by {{ i.user.name }}</p>
+  </li>
+  {% endfor %} {% endif %}
+</ul>
+{% endblock %}
