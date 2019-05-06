@@ -2,6 +2,7 @@
 <h1>{{ category.name }}</h1>
 <p>Created by {{ category.user.name }}, {{ category.user.id }}</p>
 <p>See below all the colors for {{ category.name }}</p>
+<a href="{{ url_for('newColor', category_id = category.id) }}">Add new color</a>
 {% if colors !=[] %}
 <ul>
   {% for i in colors %}
@@ -9,7 +10,7 @@
     <h2 class="color-item-name">{{ i.name }}</h2>
     <p>{{ i.hex_code }}</p>
     <p>{{ i.rgb_code }}</p>
-    <p style="background-color:{{ i.hex_code }}; height: 20px; width: 20px"></p>
+    <p style="background-color:{{ i.hex_code }}; height: 20px; width: 40px"></p>
     <p>Added by {{ i.user.name }}</p>
   </li>
   {% endfor %} {% endif %}

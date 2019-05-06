@@ -56,7 +56,7 @@ def newCategory():
         newCategory = Category(
             name=request.form['name'], user_id=request.form['user_id'])
         session.add(newCategory)
-        flash('New Category %s Successfully Created' % newCategory.name)
+        flash('New Category "%s" Successfully Created' % newCategory.name)
         session.commit()
         return redirect(url_for('showCategories'))
     else:
@@ -72,7 +72,7 @@ def editCategory(category_id):
     if request.method == 'POST':
         if request.form['name']:
             editedCategory.name = request.form['name']
-            flash('Category Successfully Edited %s' % editedCategory.name)
+            flash('Category "%s" Successfully Edited' % editedCategory.name)
             return redirect(url_for('showCategories'))
     else:
         return render_template('editCategory.html', category=editedCategory)
@@ -88,11 +88,27 @@ def deleteCategory(category_id):
     #     return "<script>function myFunction() {alert('You are not authorized to delete this category. Please create your own category in order to delete.');}</script><body onload='myFunction()''>"
     if request.method == 'POST':
         session.delete(categoryToDelete)
-        flash('%s Successfully Deleted' % categoryToDelete.name)
+        flash('Category "%s" successfully deleted' % categoryToDelete.name)
         session.commit()
         return redirect(url_for('showCategories'))
     else:
         return render_template('deleteCategory.html', category=categoryToDelete)
+
+# Create a new menu item
+@app.route('/category/<int:category_id>/color/new/', methods=['GET', 'POST'])
+def newColor(category_id):
+    # if 'username' not in login_session:
+    #     return redirect('/login')
+    category = session.query(Category).filter_by(id=category_id).one()
+    if request.method == 'POST':
+        newColor = Color(name=request.form['name'], hex_code=request.form['hex_code'],
+                         rgb_code="RGB(" + request.form['r'] + ", " + request.form['g'] + ", " + request.form['b'] + ")", category_id=category_id, user_id=category.user_id)
+        session.add(newColor)
+        session.commit()
+        flash('New color "%s" Successfully Created' % (newColor.name))
+        return redirect(url_for('showColors', category_id=category_id))
+    else:
+        return render_template('newColor.html', category_id=category_id)
 
 
 if __name__ == '__main__':
