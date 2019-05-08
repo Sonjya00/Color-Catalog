@@ -1,0 +1,107 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+			<h1>Edit Color {{color.name}}</h1>
+			<form action="#" method = "post">
+					<label for="name">Name:</label>
+					<input required type ="text" maxlength="50" name="name" value="{{color.name }}">
+					<label for="hex_code">Hex Code:</label>
+					<input required id="hexCode" type ="text" maxlength="7" name="hex_code" value={{color.hex_code}}>
+					<fieldset style="display:inline-block; border:none; text-align: center">
+						<legend>RGB code:</legend>
+						rgb (
+						<input required id="r" type="number" min="0" max="255" step="1" value="{{r}}" name="r" style="width:35px"; oninput="applyRgb()">,
+						<input required id="g" type="number" min="0" max="255" step="1" value="{{g}}" name="g" style="width:35px"; oninput="applyRgb()">,
+						<input required id="b" type="number" min="0" max="255" step="1" value="{{b}}" name="b" style="width:35px"; oninput="applyRgb()">
+						)
+					</fieldset>
+					<div id ="previewBox" style="background-color:gray; display: inline-block; height: 20px; width: 40px"></div>
+
+					<script>
+						// Get all fields value
+						const hexCode = document.getElementById("hexCode");
+						const r = document.getElementById("r");
+						const g = document.getElementById("g");
+						const b = document.getElementById("b");
+						const previewBox = document.getElementById("previewBox");
+						
+						// Once any of the rgb values changes, validate them, change hex color field, and change preview background			
+						function applyRgb() {
+							r.value = checkRgbFields(r.value);
+							g.value = checkRgbFields(g.value);
+							b.value = checkRgbFields(b.value);
+							hexCode.value = "#" + componentToHex(r.value) + componentToHex(g.value) + componentToHex(b.value);
+							previewBox.style.background = `rgb(${r.value},${g.value},${b.value})`;
+						}
+						// Helper function to validate rgb fields upon input
+						function checkRgbFields(value) {
+							if (value<0) {
+								return 0;
+							}
+							else if (value>255) {
+								return 255;
+							}
+							else {
+								return parseInt(value);
+							}
+						}
+						// Helper function to convert rgb components to hex
+						function componentToHex(c) {
+							if(!c) {
+								c = 0;
+							}
+							const hex = parseInt(c).toString(16);
+							return hex.length == 1 ? "0" + hex : hex;
+						}
+
+						// Once hex code is entered, update the rgb fields 
+						function updateRgb(value) {
+							const isValidHexCode  = /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(value);
+							if(isValidHexCode) {
+								r.value = hexToR(value);
+								g.value = hexToG(value);
+								b.value = hexToB(value);
+							}
+						}
+						// Helper functions to convert hex into rgb
+						function hexToR(h) {return parseInt((cutHex(h)).substring(0,2),16)}
+						function hexToG(h) {return parseInt((cutHex(h)).substring(2,4),16)}
+						function hexToB(h) {return parseInt((cutHex(h)).substring(4,6),16)}
+						function cutHex(h) {return (h.charAt(0)=="#") ? h.substring(1,7):h}
+
+						// Once hex code is entered, change the preview background
+						function changePreviewWithHex (value) {
+							// Check that the string is a valid hex code
+							const isOk  = /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(value);
+							if(isOk) {
+								previewBox.style.background = value
+								// If the shorthand version of the hexcode is used, convert it into the long version
+								if (value.length<5)  {
+									let previewBoxRgb = previewBox.style.background;
+									let rgbArray = previewBoxRgb.slice(4, previewBoxRgb.length-1).split(",");
+									hexCode.value = "#" + componentToHex(parseInt(rgbArray[0])) + componentToHex(parseInt(rgbArray[1])) + componentToHex(parseInt(rgbArray[2]));									}
+							}
+						}
+						// Function that checks if rgb values are <0 or nonexistent, and fixes them
+						function fixRgbNull(event){
+							if(!event.target.value || event.target.value < 0) {
+								event.target.value = 0;
+								return event.target.value;
+							}
+						}
+
+						// Event listeners
+						hexCode.addEventListener("focusout",  () =>{ changePreviewWithHex(event.target.value); updateRgb(event.target.value)})							
+						r.addEventListener("focusout",()=>fixRgbNull(event))
+						g.addEventListener("focusout",()=>fixRgbNull(event))
+						b.addEventListener("focusout",()=>fixRgbNull(event))
+					</script>
+
+
+
+					<button type="submit" id="submit" type="submit">Save</button>
+					<a href = '{{url_for('showCategories')}}'>Cancel</button>
+					</a>
+				</div>
+			</form>
+{% endblock %}

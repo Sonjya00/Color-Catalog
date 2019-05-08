@@ -111,6 +111,49 @@ def newColor(category_id):
         return render_template('newColor.html', category_id=category_id)
 
 
+# Edit a menu item
+@app.route('/category/<int:category_id>/color/<int:color_id>/edit', methods=['GET', 'POST'])
+def editColor(category_id, color_id):
+    # if 'username' not in login_session:
+    #     return redirect('/login')
+    editedColor = session.query(Color).filter_by(id=color_id).one()
+    category = session.query(Category).filter_by(id=category_id).one()
+    if request.method == 'POST':
+        if request.form['name']:
+            editedColor.name = request.form['name']
+        if request.form['hex_code']:
+            editedColor.hex_code = request.form['hex_code']
+            editedColor.rgb_code = "RGB(" + request.form['r'] + ", " + \
+                request.form['g'] + ", " + request.form['b'] + ")"
+        session.add(editedColor)
+        session.commit()
+        flash('Color %s Successfully Edited' % editedColor.name)
+        return redirect(url_for('showColors', category_id=category_id))
+    else:
+        rgbTuple = editedColor.rgb_code[4:len(
+            editedColor.rgb_code)-1].split(",")
+        r = int(rgbTuple[0])
+        g = int(rgbTuple[1])
+        b = int(rgbTuple[2])
+        return render_template('editColor.html', category_id=category_id, color_id=color_id, color=editedColor, r=r, g=g, b=b)
+
+
+# Delete a color
+@app.route('/category/<int:category_id>/color/<int:color_id>/delete', methods=['GET', 'POST'])
+def deleteColor(category_id, color_id):
+    # if 'username' not in login_session:
+    #     return redirect('/login')
+    # category = session.query(Category).filter_by(id=category_id).one()
+    colorToDelete = session.query(Color).filter_by(id=color_id).one()
+    if request.method == 'POST':
+        session.delete(colorToDelete)
+        session.commit()
+        flash('Color Successfully Deleted')
+        return redirect(url_for('showColors', category_id=category_id))
+    else:
+        return render_template('deleteColor.html', category_id=category_id, color=colorToDelete)
+
+
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
     app.debug = True

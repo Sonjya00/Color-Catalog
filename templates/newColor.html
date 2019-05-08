@@ -5,14 +5,17 @@
 	</div>
 			<form action="#" method = "post">
 					<label for="name">Name:</label>
-					<input id ="colorName" type ="text" maxlength="50" name="name" placeholder="Enter custom name">
+					<input required id ="colorName" type ="text" maxlength="50" name="name" placeholder="Enter custom name">
 					<label for="hex_code">Hex Code:</label>
-					<input id="hexCode" type ="text" maxlength="50" name="hex_code" placeholder="Hex code #">
-					<label for="rgb_code">RGB code:</label>
-					<input id="r" type="number" min="0" max="255" step="1" value="0" name="r" style="width:70px"; oninput="applyRgb()">
-					<input id="g" type="number" min="0" max="255" step="1" value="0" name="g" style="width:70px"; oninput="applyRgb()">
-					<input id="b" type="number" min="0" max="255" step="1" value="0" name="b" style="width:70px"; oninput="applyRgb()">
-
+					<input required id="hexCode" type ="text" maxlength="7" name="hex_code" placeholder="Hex code #">
+					<fieldset style="display:inline-block; border:none; text-align: center">
+						<legend>RGB code:</legend>
+						rgb (
+						<input required id="r" type="number" min="0" max="255" step="1" value="0" name="r" style="width:35px"; oninput="applyRgb()">,
+						<input required id="g" type="number" min="0" max="255" step="1" value="0" name="g" style="width:35px"; oninput="applyRgb()">,
+						<input required id="b" type="number" min="0" max="255" step="1" value="0" name="b" style="width:35px"; oninput="applyRgb()">
+						)
+					</fieldset>
 					<div id ="previewBox" style="background-color:gray; display: inline-block; height: 20px; width: 40px"></div>
 
 					<script>
