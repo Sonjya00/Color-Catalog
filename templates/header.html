@@ -1,9 +1,10 @@
-<div class="row top-menu">
-  <div class="col-md-6">
-    <a href="{{ url_for('showCategories') }}">
-      <span class="glyphicon glyphicon-home" aria-hidden="true"></span> Show All
-      Categories
+<div class="header__container">
+  <p>
+    <a href="{{ url_for('showCategories') }}" style="display:inline;">Home</a>
+    
+      {% if category %} / <span style="display:inline;" >{{ category.name }}{% endif %}</span> 
+      {% if color %} /  <a style="display:inline;" href="{{url_for('showColors', category_id = category_id)}}">{{ color.category.name }}</a> / {{ color.name }}{% endif %}</a> 
+      
     </a>
-  </div>
-  <div class="col-md-6 text-right"></div>
+  </p>
 </div>

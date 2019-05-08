@@ -1,6 +1,4 @@
-{% extends "main.html" %}
-{% block content %}
-{% include "header.html" %}
+{% extends "main.html" %} {% include "header.html" %}{% block content %}
 			<h1>New Color</h1>
 	</div>
 			<form action="#" method = "post">
@@ -11,9 +9,9 @@
 					<fieldset style="display:inline-block; border:none; text-align: center">
 						<legend>RGB code:</legend>
 						rgb (
-						<input required id="r" type="number" min="0" max="255" step="1" value="0" name="r" style="width:35px"; oninput="applyRgb()">,
-						<input required id="g" type="number" min="0" max="255" step="1" value="0" name="g" style="width:35px"; oninput="applyRgb()">,
-						<input required id="b" type="number" min="0" max="255" step="1" value="0" name="b" style="width:35px"; oninput="applyRgb()">
+						<input required id="r" type="number" min="0" max="255" step="1" value="0" name="r" style="width:40px"; oninput="applyRgb()">,
+						<input required id="g" type="number" min="0" max="255" step="1" value="0" name="g" style="width:40px"; oninput="applyRgb()">,
+						<input required id="b" type="number" min="0" max="255" step="1" value="0" name="b" style="width:40px"; oninput="applyRgb()">
 						)
 					</fieldset>
 					<input type="color" id="palette">

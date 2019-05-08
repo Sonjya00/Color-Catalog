@@ -1,4 +1,4 @@
-{% extends "main.html" %} {% include "header.html" %} {% block content %}
+{% extends "main.html" %} {% include "header.html" %}{% block content %}
 <h1>All colors!</h1>
 <p>A list of all the colors supported by most modern browsers</p>
 <h2>Category list</h2>
@@ -20,12 +20,20 @@
 </div>
 
 {% if categories !=[] %}
-<ul>
+<ul class="category-list__container">
   {% for i in categories %}
-  <li class="category-item">
+  <li class="category-list__item">
     <a href="category/{{ i.id }}" class="category-item-a"
       ><h3>{{ i.name }}</h3>
     </a>
+    {% if i.all_colors !=[] %} {% for j in i.all_colors %}
+    <p
+      style="background-color:{{
+        j.hex_code
+      }}; height: 20px; width: 20px; display: inline-block;"
+    ></p>
+    {% endfor %} {% endif %}
+    <br />
     <a href="category/{{ i.id }}/edit">Edit category</a> -
     <a href="category/{{ i.id }}/delete">Delete category</a>
   </li>

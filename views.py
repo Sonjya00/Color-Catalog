@@ -32,6 +32,10 @@ def colorsJSON():
 @app.route('/categories')
 def showCategories():
     categories = session.query(Category).all()
+    for category in categories:
+        colors = session.query(Color).filter_by(
+            category_id=category.id).all()
+        category.all_colors = colors
     return render_template('categories.html', categories=categories)
 
 # Show all colors belonging to a category
