@@ -94,7 +94,7 @@ def deleteCategory(category_id):
     else:
         return render_template('deleteCategory.html', category=categoryToDelete)
 
-# Create a new menu item
+# Create a new color
 @app.route('/category/<int:category_id>/color/new/', methods=['GET', 'POST'])
 def newColor(category_id):
     # if 'username' not in login_session:
@@ -111,7 +111,7 @@ def newColor(category_id):
         return render_template('newColor.html', category_id=category_id)
 
 
-# Edit a menu item
+# Edit a color
 @app.route('/category/<int:category_id>/color/<int:color_id>/edit', methods=['GET', 'POST'])
 def editColor(category_id, color_id):
     # if 'username' not in login_session:
