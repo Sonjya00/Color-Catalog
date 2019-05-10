@@ -1,31 +1,43 @@
-{% extends "main.html" %} {% include "header.html" %}{% block content %}
-<h1>All colors!</h1>
-<p>A list of all the colors supported by most modern browsers</p>
-<h2>Category list</h2>
-<p>See below all categories</p>
-<a href="{{ url_for('newCategory') }}">Create New Category</a> -
-<a href="{{ url_for('categoriesJSON') }}">See JSON for categories</a> -
-<a href="{{ url_for('colorsJSON') }}">See JSON for colors</a>
-<div class="flash">
-  {% with messages = get_flashed_messages() %} {% if messages %}
-
-  <ul>
-    {% for message in messages %}
-    <li>
-      <strong> {{ message }} </strong>
-    </li>
-    {% endfor %}
-  </ul>
-  {% endif %} {% endwith %}
+{% extends "main.html" %} {% include "header.html" %} {% block content %}
+<div class="top-page__text-box">
+  <h2 class="heading--secondary">Category list</h2>
+  <p>
+    A list of all the colors supported by most modern browsers divided into
+    categories.
+  </p>
+  <p>Check them out, or create custom categories and custom colors.</p>
+  <a href="{{ url_for('newCategory') }}" class="link--default"
+    >Create New Category</a
+  >
+  -
+  <a href="{{ url_for('categoriesJSON') }}" class="link--default"
+    >See JSON for categories</a
+  >
+  -
+  <a href="{{ url_for('colorsJSON') }}" class="link--default"
+    >See JSON for colors</a
+  >
+  <div class="flash">
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul>
+      {% for message in messages %}
+      <li>
+        <strong> {{ message }} </strong>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+  </div>
 </div>
-
 {% if categories !=[] %}
 <ul class="category-list__container">
   {% for i in categories %}
   <li class="category-list__item">
-    <a href="category/{{ i.id }}" class="category-item-a"
-      ><h3>{{ i.name }}</h3>
-    </a>
+    <h3 class="heading--tertiary">
+      <a href="category/{{ i.id }}" class="category-item--name"
+        >{{ i.name }}
+      </a>
+    </h3>
     {% if i.all_colors !=[] %} {% for j in i.all_colors %}
     <p
       style="background-color:{{
@@ -34,8 +46,11 @@
     ></p>
     {% endfor %} {% endif %}
     <br />
-    <a href="category/{{ i.id }}/edit">Edit category</a> -
-    <a href="category/{{ i.id }}/delete">Delete category</a>
+    <a href="category/{{ i.id }}/edit" class="link--default">Edit category</a>
+    -
+    <a href="category/{{ i.id }}/delete" class="link--default"
+      >Delete category</a
+    >
   </li>
   {% endfor %} {% endif %}
 </ul>

@@ -1,9 +1,16 @@
 {% extends "main.html" %} {% include "header.html" %}{% block content %}
-<h2>Are you sure you want to delete {{ color.name }}?</h2>
-
+<h2 class="heading--secondary">
+  Are you sure you want to delete {{ color.name }}?
+</h2>
 <form action="#" method="post">
-  <button type="submit" id="submit" type="submit">Delete</button>
-  <a href="{{url_for('showColors', category_id = category_id)}}">Cancel </a>
+  <button class="form-btn--submit" type="submit" id="submit" type="submit">
+    Delete
+  </button>
+  <a
+    class="form-btn--cancel"
+    href="{{url_for('showColors', category_id = category_id)}}"
+    >Cancel
+  </a>
 </form>
 
 {% endblock %}

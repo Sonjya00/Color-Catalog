@@ -1,21 +1,26 @@
 {% extends "main.html" %} {% include "header.html" %}{% block content %}
-			<h1>Edit Color {{color.name}}</h1>
-			<form action="#" method = "post">
+			<h2 class="heading--secondary">Edit Color {{color.name}}</h2>
+			<form action="#" method = "POST">
 					<label for="name">Name:</label>
-					<input required type ="text" maxlength="50" name="name" value="{{color.name }}">
+					<input class="form-input--text" required type ="text" maxlength="50" name="name" value="{{color.name }}">
 					<label for="hex_code">Hex Code:</label>
-					<input required id="hexCode" type ="text" maxlength="7" name="hex_code" value={{color.hex_code}}>
+					<input class="form-input--text" required id="hexCode" type ="text" maxlength="7" name="hex_code" value={{color.hex_code}}>
 					<fieldset style="display:inline-block; border:none; text-align: center">
 						<legend>RGB code:</legend>
 						rgb (
-						<input required id="r" type="number" min="0" max="255" step="1" value="{{r}}" name="r" style="width:40px"; oninput="applyRgb()">,
-						<input required id="g" type="number" min="0" max="255" step="1" value="{{g}}" name="g" style="width:40px"; oninput="applyRgb()">,
-						<input required id="b" type="number" min="0" max="255" step="1" value="{{b}}" name="b" style="width:40px"; oninput="applyRgb()">
+						<input class="form-input--number" required id="r" type="number" min="0" max="255" step="1" value="{{r}}" name="r" oninput="applyRgb()">,
+						<input class="form-input--number" required id="g" type="number" min="0" max="255" step="1" value="{{g}}" name="g" oninput="applyRgb()">,
+						<input class="form-input--number" required id="b" type="number" min="0" max="255" step="1" value="{{b}}" name="b" oninput="applyRgb()">
 						)
 					</fieldset>
 					<input type="color" id="palette" value="{{color.hex_code}}">
 					<div id ="previewBox" style="background-color:gray; display: inline-block; height: 20px; width: 40px; display:none"></div>
-
+					<br>
+					<button class="form-btn--submit" type="submit" id="submit" type="submit">Save</button>
+					<a class="form-btn--cancel" href ="{{url_for('showColors', category_id = category_id)}}">Cancel</button>
+					</a>
+				</div>
+			</form>
 					<script>
 							
 							// Get all fields value
@@ -122,11 +127,4 @@
 
 						</script>
 
-
-
-					<button type="submit" id="submit" type="submit">Save</button>
-					<a href = '{{url_for('showCategories')}}'>Cancel</button>
-					</a>
-				</div>
-			</form>
 {% endblock %}

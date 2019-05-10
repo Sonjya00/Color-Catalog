@@ -1,28 +1,36 @@
 {% extends "main.html" %} {% include "header.html" %}{% block content %}
-<h1>{{ category.name }}</h1>
-<p>Created by {{ category.user.name }}, {{ category.user.id }}</p>
-<p>See below all the colors for {{ category.name }}</p>
-<a href="{{ url_for('newColor', category_id = category.id) }}">Add new color</a>
+<div class="top-page__text-box">
+  <h2 class="heading--secondary">{{ category.name }}</h2>
+  <p>Created by {{ category.user.name }}, {{ category.user.id }}</p>
+  <p>
+    See below all the colors for {{ category.name }}, including their hexcode
+    and rgb code
+  </p>
+  <a
+    href="{{ url_for('newColor', category_id = category.id) }}"
+    class="link--default"
+    >Add new color</a
+  >
 
-<div class="flash">
-  {% with messages = get_flashed_messages() %} {% if messages %}
+  <div class="flash">
+    {% with messages = get_flashed_messages() %} {% if messages %}
 
-  <ul>
-    {% for message in messages %}
-    <li>
-      <strong> {{ message }} </strong>
-    </li>
-    {% endfor %}
-  </ul>
-  {% endif %} {% endwith %}
+    <ul>
+      {% for message in messages %}
+      <li>
+        <strong> {{ message }} </strong>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+  </div>
 </div>
-
 {% if colors !=[] %}
 
 <ul class="color-list__container">
   {% for i in colors %}
   <li class="color-list__item">
-    <h2 class="color-item-name">{{ i.name }}</h2>
+    <h3 class="color-item-name">{{ i.name }}</h3>
     <p>{{ i.hex_code }}</p>
     <p>{{ i.rgb_code }}</p>
     <p
@@ -32,10 +40,12 @@
     <p>Added by {{ i.user.name }}</p>
     <a
       href="{{ url_for('editColor', category_id = category.id, color_id = i.id) }}"
+      class="link--default"
       >Edit color</a
     >
     <a
       href="{{ url_for('deleteColor', category_id = category.id, color_id = i.id) }}"
+      class="link--default"
       >Delete color</a
     >
   </li>

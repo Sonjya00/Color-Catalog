@@ -1,10 +1,13 @@
 <div class="header__container">
-  <p>
-    <a href="{{ url_for('showCategories') }}" style="display:inline;">Home</a>
-    
-      {% if category %} / <span style="display:inline;" >{{ category.name }}{% endif %}</span> 
-      {% if color %} /  <a style="display:inline;" href="{{url_for('showColors', category_id = category_id)}}">{{ color.category.name }}</a> / {{ color.name }}{% endif %}</a> 
-      
-    </a>
-  </p>
+  <div class="header__top">
+    <h1>All colors!</h1>
+  </div>
+  <div class="header__bottom" style="text-align:center;"">
+    <p>
+      <a href="{{ url_for('showCategories') }}" style="display:inline;" class="link--default">Home</a>
+        {% if category %} / <span style="display:inline;" >{{ category.name }}{% endif %}</span> 
+        {% if color %} /  <a style="display:inline;" href="{{url_for('showColors', category_id = category_id)}}">{{ color.category.name }}</a> / {{ color.name }}{% endif %}</a>   
+      </a>
+    </p>
+  </div>
 </div>
