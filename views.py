@@ -243,8 +243,6 @@ def showColors(category_id):
         category_id=category_id).all()
     # get info about the user, if logged in
     creator = getUserInfo(category.user_id)
-    print('Category created by %s, current user = %s' %
-          (category.user_id, login_session['user_id']))
    # If a user is logged in, get current user info
     current_user = {}
     if 'username' in login_session:
@@ -321,9 +319,10 @@ def deleteCategory(category_id):
 # Create a new color
 @app.route('/category/<int:category_id>/color/new/', methods=['GET', 'POST'])
 def newColor(category_id):
-    # if 'username' not in login_session:
-    #     return redirect('/login')
     category = session.query(Category).filter_by(id=category_id).one()
+    # Chceck if a user is logged in
+    if 'username' not in login_session:
+        return redirect('/login')
     if request.method == 'POST':
         newColor = Color(name=request.form['name'], hex_code=request.form['hex_code'],
                          rgb_code="RGB(" + request.form['r'] + ", " + request.form['g'] + ", " + request.form['b'] + ")", category_id=category_id, user_id=category.user_id)
@@ -334,14 +333,13 @@ def newColor(category_id):
     else:
         return render_template('newColor.html', category_id=category_id)
 
-
 # Edit a color
 @app.route('/category/<int:category_id>/color/<int:color_id>/edit', methods=['GET', 'POST'])
 def editColor(category_id, color_id):
+    editedColor = session.query(Color).filter_by(id=color_id).one()
+    # Chceck if a user is logged in
     if 'username' not in login_session:
         return redirect('/login')
-    editedColor = session.query(Color).filter_by(id=color_id).one()
-    # category = session.query(Category).filter_by(id=category_id).one()
     if request.method == 'POST':
         if request.form['name']:
             editedColor.name = request.form['name']
@@ -365,13 +363,10 @@ def editColor(category_id, color_id):
 # Delete a color
 @app.route('/category/<int:category_id>/color/<int:color_id>/delete', methods=['GET', 'POST'])
 def deleteColor(category_id, color_id):
+    colorToDelete = session.query(Color).filter_by(id=color_id).one()
     # Chceck if a user is logged in
     if 'username' not in login_session:
         return redirect('/login')
-    else:
-        print(login_session)
-    # category = session.query(Category).filter_by(id=category_id).one()
-    colorToDelete = session.query(Color).filter_by(id=color_id).one()
     if request.method == 'POST':
         session.delete(colorToDelete)
         session.commit()
