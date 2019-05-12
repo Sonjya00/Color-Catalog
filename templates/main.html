@@ -60,6 +60,17 @@
       .header__bottom {
         height: 50px;
         background-color: rgba(145, 180, 255, 0.8);
+        text-align: center;
+        position: relative;
+      }
+      .breadcrum {
+        display: inline-block;
+        margin-top: 15px;
+      }
+      .signin-btn {
+        display: inline-block;
+        position: absolute;
+        right: 30px;
       }
       /* Container's styles */
       .container__outer {
@@ -107,6 +118,10 @@
       p {
         color: rgb(0, 0, 0);
       }
+      /* Flash */
+      .flash-list {
+        list-style-position: inside;
+      }
       /* Category/Color grids styles */
       .category-list__container,
       .color-list__container {
@@ -118,6 +133,7 @@
         grid-row-gap: 20px;
         list-style-type: none;
         padding: 0;
+        grid-auto-rows: 1fr;
       }
       .category-list__item,
       .color-list__item {
@@ -134,12 +150,21 @@
         padding: 10px;
         text-align: center;
       }
+      .color-list__item--hidden-template {
+        visibility: hidden;
+      }
       .color-list__item__preview-box {
         border-radius: 5px;
         box-shadow: 2px 2px 10px rgb(185, 185, 185);
         height: 40px;
         margin: 0 auto;
         width: 100px;
+      }
+      .link--create-new-card {
+        font-size: 22px;
+        position: relative;
+        top: 45%;
+        transform: translateY(-50%);
       }
 
       /* Forms */

@@ -2,12 +2,25 @@
   <div class="header__top">
     <h1>All colors!</h1>
   </div>
-  <div class="header__bottom" style="text-align:center;"">
-    <p>
-      <a href="{{ url_for('showCategories') }}" style="display:inline;" class="link--default">Home</a>
-        {% if category %} / <span style="display:inline;" >{{ category.name }}{% endif %}</span> 
-        {% if color %} /  <a style="display:inline;" href="{{url_for('showColors', category_id = category_id)}}">{{ color.category.name }}</a> / {{ color.name }}{% endif %}</a>   
+  <div class="header__bottom">
+    <span class="breadcrum">
+      <a href="{{ url_for('showCategories') }}" class="link--default">Home</a>
+        {% if category %} / <span>{{ category.name }}{% endif %}</span> 
+        {% if color %} /  <a href="{{url_for('showColors', category_id = category_id)}}">{{ color.category.name }}</a> / {{ color.name }}{% endif %}</a>   
       </a>
-    </p>
+    </span>
+    {% if current_user %}
+    <div class="signin-btn">
+      <a href="{{ url_for('showLogin') }}">
+          {{current_user["username"]}} 
+          <img src="{{current_user['picture']}}" class="user-picture" style="height: 35px; width: 35px; border-radius: 20px; background-color: gray; margin-top: 5px;"></img>
+      </a>
+    </div>
+    {% else %}
+    <div class="signin-btn"><a href="{{ url_for('showLogin') }}">
+        Login
+    </a></div>
+    
+    {% endif %}
   </div>
 </div>

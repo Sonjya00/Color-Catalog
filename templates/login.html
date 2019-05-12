@@ -1,0 +1,116 @@
+{% extends "main.html" %} {% include "header.html" %} {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script
+  src="https://apis.google.com/js/client:platform.js?onload=start"
+  async
+  defer
+></script>
+{% if current_user["username"] %}
+<!-- If a user is logged in -->
+<h2 class="heading--secondary">Logged in as {{ current_user["username"] }}</h2>
+<p>{{ current_user["email"] }}</p>
+<img
+  src="{{ current_user['picture'] }}"
+  style="width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"
+/>
+<button id="signinButton">Login with another account</button>
+<a
+  class="form-btn--cancel"
+  href="{{ url_for('gdisconnect') }}"
+  onclick="signOut();"
+  >Sign out</a
+>
+<div id="result"></div>
+{% else %}
+<!-- If a user isn't logged in -->
+<h2 class="heading--secondary">Login with your Google account</h2>
+<div class="flash">
+  {% with messages = get_flashed_messages() %} {% if messages %}
+  <ul class="flash-list">
+    {% for message in messages %}
+    <li>
+      <strong> {{ message }} </strong>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %} {% endwith %}
+</div>
+<button class="form-btn--cancel" id="signinButton">Google Signin</button>
+<div id="result"></div>
+{%endif%}
+<script>
+  function start() {
+    gapi.load("auth2", function() {
+      auth2 = gapi.auth2.init({
+        client_id: "{{CLIENT_ID}}"
+      });
+    });
+  }
+</script>
+<!-- LOGIN -->
+<script>
+  $("#signinButton").click(function() {
+    function signInCallback(authResult) {
+      if (authResult["code"]) {
+        // $("#signinButton").attr("style", "display: none");
+        $("#signinButton").text("Signed in");
+        $.ajax({
+          type: "POST",
+          url: "/gconnect?state={{STATE}}",
+          headers: {
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          contentType: "application/octet-stream; charset=utf-8",
+          success: function(result) {
+            $("#result").html(
+              "Login Successful!</br>" + result + "</br>Redirecting..."
+            );
+            setTimeout(function() {
+              window.location.href = "/";
+            }, 2000);
+          },
+          processData: false,
+          data: authResult["code"]
+        });
+      } else {
+        // handle error
+        console.log("There was an error: " + authResult["error"]);
+        $("#result").html(
+          "Failed to make a server-side call. Check your configuration and console."
+        );
+      }
+    }
+    auth2.grantOfflineAccess().then(signInCallback);
+  });
+</script>
+<!-- LOGOUT -->
+<script>
+  // function signOut() {
+  //   $.ajax({
+  //     type: "PUT",
+  //     url: "/gdisconnect?state={{STATE}}",
+  //     headers: {
+  //       "X-Requested-With": "XMLHttpRequest"
+  //     },
+  //     contentType: "application/octet-stream; charset=utf-8",
+  //     success: function(result) {
+  //       $("#result").html(
+  //         "Logout Successful!</br>" + result + "</br>Redirecting..."
+  //       );
+  //       setTimeout(function() {
+  //         window.location.href = "/";
+  //       }, 2000);
+  //     }
+  //   });
+  // }
+  function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2
+      .signOut()
+      .then(function() {
+        console.log("User signed out.");
+      })
+      .catch(e => console.log(e));
+  }
+</script>
+{% endblock %}

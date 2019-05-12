@@ -6,10 +6,6 @@
     categories.
   </p>
   <p>Check them out, or create custom categories and custom colors.</p>
-  <a href="{{ url_for('newCategory') }}" class="link--default"
-    >Create New Category</a
-  >
-  -
   <a href="{{ url_for('categoriesJSON') }}" class="link--default"
     >See JSON for categories</a
   >
@@ -19,7 +15,7 @@
   >
   <div class="flash">
     {% with messages = get_flashed_messages() %} {% if messages %}
-    <ul>
+    <ul class="flash-list">
       {% for message in messages %}
       <li>
         <strong> {{ message }} </strong>
@@ -29,9 +25,10 @@
     {% endif %} {% endwith %}
   </div>
 </div>
-{% if categories !=[] %}
+
 <ul class="category-list__container">
-  {% for i in categories %}
+  <!-- If there are categories -->
+  {% if categories !=[] %} {% for i in categories %}
   <li class="category-list__item">
     <h3 class="heading--tertiary">
       <a href="category/{{ i.id }}" class="category-item--name"
@@ -52,6 +49,29 @@
       >Delete category</a
     >
   </li>
-  {% endfor %} {% endif %}
+  {% endfor %}
+  <li class="category-list__item">
+    <div class="link--create-new-card">
+      <a href="{{ url_for('newCategory') }}" class="link--default"
+        >Add new category</a
+      >
+    </div>
+  </li>
+  {% else %}
+  <!-- If there are no categories yet -->
+  <li class="category-list__item">
+    <div class="link--create-new-card">
+      <a href="{{ url_for('newCategory') }}" class="link--default"
+        >Add first color</a
+      >
+    </div>
+  </li>
+  <li class="category-list__item color-list__item--hidden-template">
+    <h3 class="heading--tertiary">CategoryName</h3>
+    <p style="height: 20px; width: 20px; display: inline-block;"></p>
+    <a href="#" class="link--default">Edit category</a>
+    <a href="#" class="link--default">Delete category</a>
+  </li>
+  {% endif %}
 </ul>
 {% endblock %}
