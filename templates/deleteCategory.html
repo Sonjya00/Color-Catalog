@@ -1,13 +1,15 @@
 {% extends "main.html" %} {% include "header.html" %}{% block content %}
 <h2 class="heading--secondary">
-  Are you sure you want to delete {{ category.name }}?
+  Delete Category?
 </h2>
-
+<p>
+  Are you sure to delete {{ category.name }}? By deleting it, all the colors
+  within it will also be deleted.
+</p>
 <form action="#" method="post">
   <button class="form-btn--submit" type="submit" type="submit">
     Delete
   </button>
   <a class="form-btn--cancel" href="{{ url_for('showCategories') }}">Cancel</a>
 </form>
-
 {% endblock %}

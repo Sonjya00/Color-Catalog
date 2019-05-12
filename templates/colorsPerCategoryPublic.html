@@ -38,7 +38,7 @@
       style="background-color:{{ i.hex_code }}"
     ></p>
     <p>Added by {{ i.user.name }}</p>
-    <a
+    <!-- <a
       href="{{ url_for('editColor', category_id = category.id, color_id = i.id) }}"
       class="link--default"
       >Edit color</a
@@ -47,7 +47,7 @@
       href="{{ url_for('deleteColor', category_id = category.id, color_id = i.id) }}"
       class="link--default"
       >Delete color</a
-    >
+    > -->
   </li>
   {% endfor %} {% endif %}
 </ul>

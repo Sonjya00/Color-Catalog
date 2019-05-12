@@ -68,6 +68,7 @@ def getCurrentUserInfo(current_user):
     current_user['username'] = login_session['username']
     current_user['picture'] = login_session['picture']
     current_user['email'] = login_session['email']
+    current_user['id'] = login_session['user_id']
     return current_user
 
 # GConnect
@@ -276,10 +277,13 @@ def newCategory():
 # Edit a category
 @app.route('/category/<int:category_id>/edit/', methods=['GET', 'POST'])
 def editCategory(category_id):
-    # if 'username' not in login_session:
-    #     return redirect('/login')
     editedCategory = session.query(
         Category).filter_by(id=category_id).one()
+    # Check if username is logged in, and if it is the same as the cretor of the category
+    if 'username' not in login_session:
+        return redirect('/login')
+    if editedCategory.user_id != login_session['user_id']:
+        return "<script>function myFunction() {alert('You are not authorized to edit this category.');}</script><body onload='myFunction()''>"
     if request.method == 'POST':
         if request.form['name']:
             editedCategory.name = request.form['name']
@@ -293,11 +297,20 @@ def editCategory(category_id):
 def deleteCategory(category_id):
     categoryToDelete = session.query(
         Category).filter_by(id=category_id).one()
-    # if 'username' not in login_session:
-    #     return redirect('/login')
-    # if categoryToDelete.user_id != login_session['user_id']:
-    #     return "<script>function myFunction() {alert('You are not authorized to delete this category. Please create your own category in order to delete.');}</script><body onload='myFunction()''>"
+    # Check if username is logged in, and if it is the same as the cretor of the category
+    if 'username' not in login_session:
+        return redirect('/login')
+    if categoryToDelete.user_id != login_session['user_id']:
+        return "<script>function myFunction() {alert('You are not authorized to delete this category.');}</script><body onload='myFunction()''>"
     if request.method == 'POST':
+        # Delete all colors inside of the category.
+        # This will prevent these color to be reassigned by a new category
+        # created afterwards that takes the same id of the deleted one
+        colors = session.query(Color).filter_by(
+            category_id=category_id).all()
+        for color in colors:
+            session.delete(color)
+        # Delete category
         session.delete(categoryToDelete)
         flash('Category "%s" successfully deleted' % categoryToDelete.name)
         session.commit()

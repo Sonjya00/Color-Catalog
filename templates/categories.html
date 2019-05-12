@@ -5,7 +5,7 @@
     A list of all the colors supported by most modern browsers divided into
     categories.
   </p>
-  <p>Check them out, or create custom categories and custom colors.</p>
+  <p>Check them out, or create custom categories and colors.</p>
   <a href="{{ url_for('categoriesJSON') }}" class="link--default"
     >See JSON for categories</a
   >
@@ -41,13 +41,17 @@
         j.hex_code
       }}; height: 20px; width: 20px; display: inline-block;"
     ></p>
-    {% endfor %} {% endif %}
+    {% endfor %} {%else%}
+    <p>No color added yet</p>
+    {% endif %}
     <br />
+    {% if current_user["id"] == i["user_id"]%}
     <a href="category/{{ i.id }}/edit" class="link--default">Edit category</a>
     -
     <a href="category/{{ i.id }}/delete" class="link--default"
       >Delete category</a
     >
+    {%endif%}
   </li>
   {% endfor %}
   <li class="category-list__item">
