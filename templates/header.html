@@ -3,17 +3,15 @@
     <h1>All colors!</h1>
   </div>
   <div class="header__bottom">
-    <span class="breadcrum">
+    <div class="breadcrum">
       <a href="{{ url_for('showCategories') }}" class="link--default">Home</a>
         {% if category %} / <span>{{ category.name }}{% endif %}</span> 
-        {% if color %} /  <a href="{{url_for('showColors', category_id = category_id)}}">{{ color.category.name }}</a> / {{ color.name }}{% endif %}</a>   
-      </a>
-    </span>
+        {% if color %} / <a href="{{url_for('showColors', category_id = category_id)}}">{{ color.category.name }}</a> / {{ color.name }}{% endif %}
+    </div>
     {% if current_user %}
     <div class="signin-btn">
       <a href="{{ url_for('showLogin') }}">
-          {{current_user["username"]}} 
-          <img src="{{current_user['picture']}}" class="user-picture" style="height: 35px; width: 35px; border-radius: 20px; background-color: gray; margin-top: 5px;"></img>
+          <span class="signin-btn--username">{{current_user["username"]}}</span><img src="{{current_user['picture']}}" class="user-picture" style="vertical-align:middle; height: 40px; width: 40px; border-radius: 20px; background-color: gray; margin-top: 5px;"></img>
       </a>
     </div>
     {% else %}

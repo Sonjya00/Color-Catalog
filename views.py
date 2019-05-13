@@ -252,7 +252,7 @@ def showColors(category_id):
         return render_template('colorsPerCategoryPublic.html', colors=colors, category=category, creator=creator, current_user=current_user)
         # Else, return a page where s/he can fully edit the category
     else:
-        return render_template('colorsPerCategory.html', category=category, colors=colors, creator=creator)
+        return render_template('colorsPerCategory.html', category=category, colors=colors, creator=creator, current_user=current_user)
 
 # Create a new category
 @app.route('/category/new/', methods=['GET', 'POST'])
@@ -261,6 +261,10 @@ def newCategory():
     # so redirect to login page
     if 'username' not in login_session:
         return redirect('/login')
+    # If a user is logged in, get current user info
+    current_user = {}
+    if 'username' in login_session:
+        getCurrentUserInfo(current_user)
     # If a request is sent, add a new category
     if request.method == 'POST':
         newCategory = Category(
@@ -270,7 +274,7 @@ def newCategory():
         session.commit()
         return redirect(url_for('showCategories'))
     else:
-        return render_template('newCategory.html')
+        return render_template('newCategory.html', current_user=current_user)
 
 # Edit a category
 @app.route('/category/<int:category_id>/edit/', methods=['GET', 'POST'])
@@ -280,6 +284,10 @@ def editCategory(category_id):
     # Check if username is logged in, and if it is the same as the cretor of the category
     if 'username' not in login_session:
         return redirect('/login')
+    # If a user is logged in, get current user info
+    current_user = {}
+    if 'username' in login_session:
+        getCurrentUserInfo(current_user)
     if editedCategory.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to edit this category.');}</script><body onload='myFunction()''>"
     if request.method == 'POST':
@@ -288,7 +296,7 @@ def editCategory(category_id):
             flash('Category "%s" Successfully Edited' % editedCategory.name)
             return redirect(url_for('showCategories'))
     else:
-        return render_template('editCategory.html', category=editedCategory)
+        return render_template('editCategory.html', category=editedCategory, current_user=current_user)
 
 # Delete a category
 @app.route('/category/<int:category_id>/delete/', methods=['GET', 'POST'])
@@ -298,6 +306,10 @@ def deleteCategory(category_id):
     # Check if username is logged in, and if it is the same as the cretor of the category
     if 'username' not in login_session:
         return redirect('/login')
+    # If a user is logged in, get current user info
+    current_user = {}
+    if 'username' in login_session:
+        getCurrentUserInfo(current_user)
     if categoryToDelete.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to delete this category.');}</script><body onload='myFunction()''>"
     if request.method == 'POST':
@@ -314,7 +326,7 @@ def deleteCategory(category_id):
         session.commit()
         return redirect(url_for('showCategories'))
     else:
-        return render_template('deleteCategory.html', category=categoryToDelete)
+        return render_template('deleteCategory.html', category=categoryToDelete, current_user=current_user)
 
 # Create a new color
 @app.route('/category/<int:category_id>/color/new/', methods=['GET', 'POST'])
@@ -323,6 +335,10 @@ def newColor(category_id):
     # Chceck if a user is logged in
     if 'username' not in login_session:
         return redirect('/login')
+    # If a user is logged in, get current user info
+    current_user = {}
+    if 'username' in login_session:
+        getCurrentUserInfo(current_user)
     if request.method == 'POST':
         newColor = Color(name=request.form['name'], hex_code=request.form['hex_code'],
                          rgb_code="RGB(" + request.form['r'] + ", " + request.form['g'] + ", " + request.form['b'] + ")", category_id=category_id, user_id=category.user_id)
@@ -331,7 +347,7 @@ def newColor(category_id):
         flash('New color "%s" Successfully Created' % (newColor.name))
         return redirect(url_for('showColors', category_id=category_id))
     else:
-        return render_template('newColor.html', category_id=category_id)
+        return render_template('newColor.html', category_id=category_id, current_user=current_user)
 
 # Edit a color
 @app.route('/category/<int:category_id>/color/<int:color_id>/edit', methods=['GET', 'POST'])
@@ -340,6 +356,10 @@ def editColor(category_id, color_id):
     # Chceck if a user is logged in
     if 'username' not in login_session:
         return redirect('/login')
+    # If a user is logged in, get current user info
+    current_user = {}
+    if 'username' in login_session:
+        getCurrentUserInfo(current_user)
     if request.method == 'POST':
         if request.form['name']:
             editedColor.name = request.form['name']
@@ -357,7 +377,7 @@ def editColor(category_id, color_id):
         r = int(rgbTuple[0])
         g = int(rgbTuple[1])
         b = int(rgbTuple[2])
-        return render_template('editColor.html', category_id=category_id, color_id=color_id, color=editedColor, r=r, g=g, b=b)
+        return render_template('editColor.html', category_id=category_id, color_id=color_id, color=editedColor, r=r, g=g, b=b, current_user=current_user)
 
 
 # Delete a color
@@ -367,13 +387,17 @@ def deleteColor(category_id, color_id):
     # Chceck if a user is logged in
     if 'username' not in login_session:
         return redirect('/login')
+    # If a user is logged in, get current user info
+    current_user = {}
+    if 'username' in login_session:
+        getCurrentUserInfo(current_user)
     if request.method == 'POST':
         session.delete(colorToDelete)
         session.commit()
         flash('Color Successfully Deleted')
         return redirect(url_for('showColors', category_id=category_id))
     else:
-        return render_template('deleteColor.html', category_id=category_id, color=colorToDelete)
+        return render_template('deleteColor.html', category_id=category_id, color=colorToDelete, current_user=current_user)
 
 
 if __name__ == '__main__':

@@ -8,8 +8,43 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css')
 
 
-    }}">
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       html,
       body {
@@ -35,11 +70,7 @@
       .header__container {
         width: 100%;
         display: grid;
-      }
-      .header__container a {
-        font-weight: 500;
-        letter-spacing: 1px;
-        margin: 10px;
+        position: relative;
       }
       .header__top {
         /* background: linear-gradient(
@@ -61,16 +92,26 @@
         height: 50px;
         background-color: rgba(145, 180, 255, 0.8);
         text-align: center;
-        position: relative;
+        display: grid;
+        grid-template-columns: repeat(3, 33%);
       }
       .breadcrum {
         display: inline-block;
         margin-top: 15px;
+        letter-spacing: 1px;
+        grid-column-start: 2;
       }
       .signin-btn {
         display: inline-block;
-        position: absolute;
-        right: 30px;
+        letter-spacing: 1px;
+        text-align: right;
+      }
+      .signin-btn--username {
+        background-color: white;
+        font-size: 14px;
+        /* top: 75%;
+        left: 50%;
+        transform: translateX(-50%); */
       }
       /* Container's styles */
       .container__outer {
