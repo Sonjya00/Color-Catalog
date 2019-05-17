@@ -11,7 +11,7 @@
     {% if current_user %}
     <div class="signin-btn">
       <a href="{{ url_for('showLogin') }}">
-          <span class="signin-btn--username">{{current_user["username"]}}</span><img src="{{current_user['picture']}}" class="user-picture" style="vertical-align:middle; height: 40px; width: 40px; border-radius: 20px; background-color: gray; margin-top: 5px;"></img>
+          <span class="signin-btn--username">{{current_user["username"]}}</span><img alt="{{current_user['username']}}" src="{{current_user['picture']}}" class="user-picture--thumbnail"></img>
       </a>
     </div>
     {% else %}

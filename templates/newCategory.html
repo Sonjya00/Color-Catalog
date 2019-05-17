@@ -2,7 +2,7 @@
 <h2 class="heading--secondary">New Category</h2>
 <form action="#" method="post">
     <label for="name">Name:</label>
-    <input class="form-input--text" type="text" class="form-control" maxlength="100" name="name" />
+    <input required class="form-input--text" type="text" class="form-control" maxlength="100" name="name" />
     <button class="form-btn--submit" type="submit" type="submit">Create</button>
     <a class="form-btn--cancel" href="{{ url_for('showCategories') }}">Cancel</a>
   </div>

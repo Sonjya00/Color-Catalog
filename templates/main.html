@@ -5,7 +5,50 @@
       href="https://fonts.googleapis.com/css?family=Raleway:400,700"
       rel="stylesheet"
     />
+    <title>All Colors</title>
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     }}">
@@ -18,7 +61,7 @@
         margin: 0;
       }
       body {
-        background: linear-gradient(
+        /* background: linear-gradient(
           to bottom,
           rgb(208, 208, 255),
           rgb(255, 208, 208),
@@ -26,7 +69,8 @@
           rgb(208, 208, 255),
           rgb(255, 208, 208),
           rgb(208, 255, 208)
-        );
+        ); */
+        background: linear-gradient(to top, #ffc671, #ffdf9b);
       }
       * {
         font-family: "Raleway", sans-serif;
@@ -43,7 +87,7 @@
           rgba(145, 180, 255, 0.8),
           rgba(51, 102, 211, 0.8)
         ); */
-        background-color: rgba(51, 102, 211, 0.8);
+        background-color: rgb(76, 124, 226);
         height: 70px;
       }
       .header__top h1 {
@@ -55,7 +99,7 @@
       }
       .header__bottom {
         height: 50px;
-        background-color: rgba(145, 180, 255, 0.8);
+        background-color: rgb(186, 207, 252);
         text-align: center;
         display: grid;
         grid-template-columns: repeat(3, 33%);
@@ -86,6 +130,14 @@
       }
       .container__inner {
         min-width: 80%;
+      }
+      .user-picture {
+        vertical-align: middle;
+        height: 40px;
+        width: 40px;
+        border-radius: 20px;
+        background-color: gray;
+        margin-top: 5px;
       }
       /* Upper part of the page styles */
       .top-page__text-box {
@@ -132,7 +184,6 @@
       .category-list__container,
       .color-list__container {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         justify-items: stretch;
         align-items: stretch;
         grid-column-gap: 20px;
@@ -141,13 +192,31 @@
         padding: 0;
         grid-auto-rows: 1fr;
       }
+      .category-list__container {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+      .color-list__container {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+      .category-list__item--inner,
+      .color-list__item--inner {
+        position: relative;
+        height: 100%;
+        width: 100%;
+      }
       .category-list__item,
-      .color-list__item {
+      .color-list__item,
+      .category-list__item--inner,
+      .color-list__item--inner {
         transition: 0.3s;
       }
       .category-list__item:hover,
       .color-list__item:hover {
         transform: scale(1.1);
+      }
+      .color-list__item:hover .color-list__item--inner,
+      .category-list__item:hover .category-list__item--inner {
+        transform: scale(0.9);
       }
       .category-list__item,
       .color-list__item {
@@ -159,12 +228,17 @@
       .color-list__item--hidden-template {
         visibility: hidden;
       }
+      .color-list__item__name {
+        text-transform: lowercase;
+      }
       .color-list__item__preview-box {
-        border-radius: 5px;
-        box-shadow: 2px 2px 10px rgb(185, 185, 185);
+        border: 1px solid black;
         height: 40px;
         margin: 0 auto;
-        width: 100px;
+        width: 80px;
+      }
+      .category-list__links {
+        margin-top: 15px;
       }
       .link--create-new-card {
         font-size: 22px;
@@ -182,8 +256,8 @@
         width: 50px;
       }
       .form-btn--submit {
-        background-color: rgba(145, 180, 255, 0.8);
-        border: 1px solid rgb(172, 172, 172);
+        background-color: rgb(186, 207, 252);
+        border: 1px solid rgb(76, 124, 226);
         border-radius: 2px;
         cursor: pointer;
         font-size: 14px;
@@ -193,6 +267,7 @@
       }
       .form-btn--submit:hover {
         background-color: rgba(51, 102, 211, 0.8);
+        border: 1px solid rgb(255, 255, 255);
         color: white;
       }
       .form-btn--cancel {
@@ -203,6 +278,33 @@
         width: 60px;
         text-decoration: none;
         color: black;
+      }
+      .user-profile__container {
+        width: max-content;
+        text-align: center;
+      }
+      .google-btn {
+        width: auto !important;
+      }
+      .google-logo {
+        height: 12px;
+        vertical-align: middle;
+      }
+      .user-picture--thumbnail {
+        vertical-align: middle;
+        height: 40px;
+        width: 40px;
+        border-radius: 20px;
+        background-color: gray;
+        margin-top: 5px;
+      }
+      .user-picture--full {
+        width: 200px;
+        height: 200px;
+        border-radius: 150px;
+        display: block;
+        -webkit-border-radius: 150px;
+        -moz-border-radius: 150px;
       }
     </style>
   </head>

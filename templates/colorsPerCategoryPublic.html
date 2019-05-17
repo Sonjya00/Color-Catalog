@@ -1,17 +1,10 @@
 {% extends "main.html" %} {% include "header.html" %}{% block content %}
 <div class="top-page__text-box">
   <h2 class="heading--secondary">{{ category.name }}</h2>
-  <p>Created by {{ category.user.name }}, {{ category.user.id }}</p>
   <p>
-    See below all the colors for {{ category.name }}, including their hexcode
-    and rgb code
+    Created by {{ category.user.name }}
+    <!-- ,{{ category.user.id }} -->
   </p>
-  <!-- <a
-    href="{{ url_for('newColor', category_id = category.id) }}"
-    class="link--default"
-    >Add new color</a
-  > -->
-
   <div class="flash">
     {% with messages = get_flashed_messages() %} {% if messages %}
 
@@ -30,54 +23,65 @@
   <!-- If there are colors -->
   {% if colors !=[] %} {% for i in colors %}
   <li class="color-list__item">
-    <h3 class="color-item-name">{{ i.name }}</h3>
-    <p>{{ i.hex_code }}</p>
-    <p>{{ i.rgb_code }}</p>
-    <p
-      class="color-list__item__preview-box"
-      style="background-color:{{ i.hex_code }}"
-    ></p>
-    <p>Added by {{ i.user.name }}</p>
-    <a
-      href="{{ url_for('editColor', category_id = category.id, color_id = i.id) }}"
-      class="link--default"
-      >Edit color</a
-    >
-    <a
-      href="{{ url_for('deleteColor', category_id = category.id, color_id = i.id) }}"
-      class="link--default"
-      >Delete color</a
-    >
+    <div class="color-list__item--inner">
+      <h3 class="color-list__item__name">{{ i.name }}</h3>
+      <p>{{ i.hex_code }}</p>
+      <p>{{ i.rgb_code }}</p>
+      <p
+        class="color-list__item__preview-box"
+        style="background-color:{{ i.hex_code }}"
+      ></p>
+      <p>Added by {{ i.user.name }}</p>
+      <a
+        href="{{ url_for('editColor', category_id = category.id, color_id = i.id) }}"
+        class="link--default"
+        >Edit color</a
+      >
+      <a
+        href="{{ url_for('deleteColor', category_id = category.id, color_id = i.id) }}"
+        class="link--default"
+        >Delete color</a
+      >
+    </div>
   </li>
   {% endfor %}
   <li class="color-list__item">
-    <div class="link--create-new-card">
-      <a
-        href="{{ url_for('newColor', category_id = category.id) }}"
-        class="link--default"
-        >Add new color</a
-      >
+    <div class="color-list__item--inner">
+      <div class="link--create-new-card">
+        <a
+          href="{{ url_for('newColor', category_id = category.id) }}"
+          class="link--default"
+          >Add new color</a
+        >
+      </div>
     </div>
   </li>
   {% else %}
   <!-- If there are no colors yet -->
   <li class="color-list__item">
-    <div class="link--create-new-card">
-      <a
-        href="{{ url_for('newColor', category_id = category.id) }}"
-        class="link--default"
-        >Add first color</a
-      >
+    <div class="color-list__item--inner">
+      <div class="link--create-new-card">
+        <a
+          href="{{ url_for('newColor', category_id = category.id) }}"
+          class="link--default"
+          >Add first color</a
+        >
+      </div>
     </div>
   </li>
   <li class="color-list__item color-list__item--hidden-template">
-    <h3 class="color-item-name">Colorname</h3>
-    <p>Hex Code</p>
-    <p>Rgb Code</p>
-    <p class="color-list__item__preview-box" style="background-color:gray"></p>
-    <p>Added by username</p>
-    <a href="#" class="link--default">Edit color</a>
-    <a href="#" class="link--default">Delete color</a>
+    <div class="color-list__item--inner">
+      <h3 class="color-list__item__name">Colorname</h3>
+      <p>Hex Code</p>
+      <p>Rgb Code</p>
+      <p
+        class="color-list__item__preview-box"
+        style="background-color:gray"
+      ></p>
+      <p>Added by username</p>
+      <a href="#" class="link--default">Edit color</a>
+      <a href="#" class="link--default">Delete color</a>
+    </div>
   </li>
   {% endif %}
 </ul>

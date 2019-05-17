@@ -30,51 +30,61 @@
   <!-- If there are categories -->
   {% if categories !=[] %} {% for i in categories %}
   <li class="category-list__item">
-    <h3 class="heading--tertiary">
-      <a href="category/{{ i.id }}" class="category-item--name"
-        >{{ i.name }}
-      </a>
-    </h3>
-    {% if i.all_colors !=[] %} {% for j in i.all_colors %}
-    <p
-      style="background-color:{{
-        j.hex_code
-      }}; height: 20px; width: 20px; display: inline-block; margin-top: 5px; margin-bottom: 5px; border: 1px solid black;"
-    ></p>
-    {% endfor %} {%else%}
-    <p>No color added yet</p>
-    {% endif %}
-    <br />
-    {% if current_user["id"] == i["user_id"]%}
-    <a href="category/{{ i.id }}/edit" class="link--default">Edit category</a>
-    -
-    <a href="category/{{ i.id }}/delete" class="link--default"
-      >Delete category</a
-    >
-    {%endif%}
+    <div class="category-list__item--inner">
+      <h3 class="heading--tertiary">
+        <a href="category/{{ i.id }}" class="category-item--name"
+          >{{ i.name }}
+        </a>
+      </h3>
+      <p>Created by {{ i.creator }}</p>
+      {% if i.all_colors !=[] %} {% for j in i.all_colors %}
+      <p
+        style="background-color:{{
+          j.hex_code
+        }}; height: 20px; width: 20px; display: inline-block; margin-top: 5px; margin-bottom: 5px; border: 1px solid black;"
+      ></p>
+      {% endfor %} <br />{%else%}
+      <p>No colors added yet</p>
+      {% endif %} {% if current_user["id"] == i["user_id"]%}
+      <br />
+      <div class="category-list__links">
+        <a href="category/{{ i.id }}/edit" class="link--default">Edit name</a>
+        -
+        <a href="category/{{ i.id }}/delete" class="link--default"
+          >Delete category</a
+        >
+      </div>
+      {%endif%}
+    </div>
   </li>
   {% endfor %}
   <li class="category-list__item">
-    <div class="link--create-new-card">
-      <a href="{{ url_for('newCategory') }}" class="link--default"
-        >Add new category</a
-      >
+    <div class="category-list__item--inner">
+      <div class="link--create-new-card">
+        <a href="{{ url_for('newCategory') }}" class="link--default"
+          >Add new category</a
+        >
+      </div>
     </div>
   </li>
   {% else %}
   <!-- If there are no categories yet -->
   <li class="category-list__item">
-    <div class="link--create-new-card">
-      <a href="{{ url_for('newCategory') }}" class="link--default"
-        >Add first color</a
-      >
+    <div class="category-list__item--inner">
+      <div class="link--create-new-card">
+        <a href="{{ url_for('newCategory') }}" class="link--default"
+          >Add first color</a
+        >
+      </div>
     </div>
   </li>
   <li class="category-list__item color-list__item--hidden-template">
-    <h3 class="heading--tertiary">CategoryName</h3>
-    <p style="height: 20px; width: 20px; display: inline-block;"></p>
-    <a href="#" class="link--default">Edit category</a>
-    <a href="#" class="link--default">Delete category</a>
+    <div class="category-list__item--inner">
+      <h3 class="heading--tertiary">CategoryName</h3>
+      <p style="height: 20px; width: 20px; display: inline-block;"></p>
+      <a href="#" class="link--default">Edit category</a>
+      <a href="#" class="link--default">Delete category</a>
+    </div>
   </li>
   {% endif %}
 </ul>

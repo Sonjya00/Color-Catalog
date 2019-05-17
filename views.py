@@ -229,6 +229,9 @@ def showCategories():
         colors = session.query(Color).filter_by(
             category_id=category.id).all()
         category.all_colors = colors
+        creator = session.query(User).filter_by(
+            id=category.user_id).one()
+        category.creator = creator.name
     # If a user is logged in, get current user info
     current_user = {}
     if 'username' in login_session:
