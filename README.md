@@ -22,18 +22,18 @@ Create an application that provides a list of items within a variety of categori
 
 ## Project description
 
-This is a catalog of all the colors supported by modern browsers, which are added by default and divided into 10 categories.
+This app is a catalog of all the colors supported by modern browsers, which are added by default and divided into 10 categories.
 
-- Red;
-- Pink;
-- Orange;
-- Yellow;
-- Purple;
-- Green;
-- Blue;
-- Brown;
-- White;
-- Gray.
+1. Red - 9 entries;
+2. Pink - 6 entries;
+3. Orange - 6 entries;
+4. Yellow - 11 entries;
+5. Purple - 19 entries;
+6. Green - 23 entries;
+7. Blue - 25 entries;
+8. Brown - 17 entries;
+9. White - 17 entries;
+10. Gray - 10 entries.
 
 ![Categories](screenshots/Categories.png)
 
@@ -42,13 +42,19 @@ For each color, the data recorded is:
 - Name;
 - Hex Code;
 - Rgb Code;
+- Creator.
+- (A preview box is also displayed)
 
 ![Colors](screenshots/Colors.png)
 
 It is possible to browse each category and the respective colors, as well as create new categories and colors, and edit and remove existing ones. However, while visibility is unrestricted, to make any additions, edits, or deletions, you must be logged in with a Google account (upper right corner on the header).
 
+![Login](screenshots/Login.png)
+
 When creating or editing a new color, it is possible to input either the Rgb code, the Hex code, or choose a color from the palette. The remaining fields will be updated automatically. The only field not dependent on the others is "Name".
 
-![Colors](screenshots/AddColor.png)
+![Add Color](screenshots/AddColor.png)
 
 It is also possible to check the JSON endpoints for categories and colors from the homepage.
+
+This app is designed to be fully responsive.
