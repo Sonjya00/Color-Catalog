@@ -169,9 +169,9 @@ def gconnect():
     output += '<p>Welcome, '
     output += login_session['username']
     output += '!</p>'
-    # output += '<img src="'
-    # output += login_session['picture']
-    # output += ' " style = "width: 200px; height: 200px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += '<img src="'
+    output += login_session['picture']
+    output += ' " style = "width: 200px; height: 200px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     flash("You are now logged in as %s" % login_session['username'])
     print("Login completed")
     return output

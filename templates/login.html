@@ -31,7 +31,7 @@
 </div>
 {% else %}
 <!-- If a user isn't logged in -->
-<div class="user-profile__container">
+<div id="result" class="user-profile__container">
   <h2 class="heading--secondary">Login with your Google account</h2>
   <div class="flash">
     {% with messages = get_flashed_messages() %} {% if messages %}
@@ -48,7 +48,6 @@
     <img class="google-logo" src="/static/google-logo.png" alt="Google" />
     Google Signin
   </button>
-  <div id="result" style="margin-top: 20px;"></div>
 </div>
 {%endif%}
 <script>
@@ -75,7 +74,9 @@
           contentType: "application/octet-stream; charset=utf-8",
           success: function(result) {
             $("#result").html(
-              "Login Successful!</br>" + result + "</br>Redirecting..."
+              " <h2 class='heading--secondary'> Login Successful!</h2>" +
+                result +
+                "</br><strong>Redirecting...</strong>"
             );
             setTimeout(function() {
               window.location.href = "/";
