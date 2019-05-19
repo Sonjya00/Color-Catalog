@@ -51,6 +51,30 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
@@ -102,7 +126,7 @@
         background-color: rgb(186, 207, 252);
         text-align: center;
         display: grid;
-        grid-template-columns: repeat(3, 33%);
+        grid-template-columns: 20% 60% 20%;
       }
       .breadcrum {
         display: inline-block;
@@ -111,16 +135,26 @@
         grid-column-start: 2;
       }
       .signin-btn {
-        display: inline-block;
         letter-spacing: 1px;
         text-align: right;
       }
       .signin-btn--username {
         background-color: white;
         font-size: 14px;
-        /* top: 75%;
-        left: 50%;
-        transform: translateX(-50%); */
+        margin-right: 10px;
+      }
+      @media screen and (max-width: 550px) {
+        .signin-btn--username {
+          display: none;
+        }
+      }
+      @media screen and (max-width: 420px) {
+        .breadcrum {
+          grid-column-start: 1;
+        }
+        .header__bottom {
+          grid-template-columns: 85% 15%;
+        }
       }
       /* Container's styles */
       .container__outer {
@@ -248,12 +282,28 @@
       }
 
       /* Forms */
+      .form-input__group {
+        display: block;
+        margin: 15px 0;
+      }
+      @media screen and (min-width: 420px) {
+        .form-input__group {
+          display: inline-block;
+          margin: 10px 0;
+        }
+      }
       .form-input--text {
         font-size: 14px;
       }
       .form-input--number {
         font-size: 14px;
         width: 50px;
+      }
+      .form-input__rgb {
+        display: inline-block;
+        border: none;
+        text-align: center;
+        padding: 0;
       }
       .form-btn--submit {
         background-color: rgb(186, 207, 252);
@@ -280,7 +330,7 @@
         color: black;
       }
       .user-profile__container {
-        width: max-content;
+        margin: 0 auto;
         text-align: center;
       }
       .google-btn {
@@ -302,6 +352,7 @@
         width: 200px;
         height: 200px;
         border-radius: 150px;
+        margin: 0 auto 20px;
         display: block;
         -webkit-border-radius: 150px;
         -moz-border-radius: 150px;

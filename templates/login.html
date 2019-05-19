@@ -7,8 +7,10 @@
 ></script>
 {% if current_user["username"] %}
 <!-- If a user is logged in -->
-<h2 class="heading--secondary">Logged in as {{ current_user["username"] }}</h2>
-<div class="user-profile__container">
+<div class="user-profile__container" id="result">
+  <h2 class="heading--secondary">
+    Logged in as {{ current_user["username"] }}
+  </h2>
   <p>{{ current_user["email"] }}</p>
   <img
     alt="{{ current_user['username'] }}"
@@ -25,27 +27,29 @@
     onclick="signOut();"
     >Sign out</a
   >
-  <div id="result"></div>
+  <!-- <div id="result"></div> -->
 </div>
 {% else %}
 <!-- If a user isn't logged in -->
-<h2 class="heading--secondary">Login with your Google account</h2>
-<div class="flash">
-  {% with messages = get_flashed_messages() %} {% if messages %}
-  <ul class="flash-list">
-    {% for message in messages %}
-    <li>
-      <strong> {{ message }} </strong>
-    </li>
-    {% endfor %}
-  </ul>
-  {% endif %} {% endwith %}
+<div class="user-profile__container">
+  <h2 class="heading--secondary">Login with your Google account</h2>
+  <div class="flash">
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul class="flash-list">
+      {% for message in messages %}
+      <li>
+        <strong> {{ message }} </strong>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+  </div>
+  <button class="form-btn--submit google-btn" id="signinButton">
+    <img class="google-logo" src="/static/google-logo.png" alt="Google" />
+    Google Signin
+  </button>
+  <div id="result" style="margin-top: 20px;"></div>
 </div>
-<button class="form-btn--submit google-btn" id="signinButton">
-  <img class="google-logo" src="/static/google-logo.png" alt="Google" /> Google
-  Signin
-</button>
-<div id="result"></div>
 {%endif%}
 <script>
   function start() {

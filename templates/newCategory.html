@@ -1,10 +1,22 @@
 {% extends "main.html" %} {% include "header.html" %}{% block content %}
 <h2 class="heading--secondary">New Category</h2>
 <form action="#" method="post">
+  <div class="form-input__group">
     <label for="name">Name:</label>
-    <input required class="form-input--text" type="text" class="form-control" maxlength="100" name="name" />
+    <input
+      required
+      class="form-input--text"
+      type="text"
+      class="form-control"
+      maxlength="100"
+      name="name"
+    />
+  </div>
+  <div class="form-input__group">
     <button class="form-btn--submit" type="submit" type="submit">Create</button>
-    <a class="form-btn--cancel" href="{{ url_for('showCategories') }}">Cancel</a>
+    <a class="form-btn--cancel" href="{{ url_for('showCategories') }}"
+      >Cancel</a
+    >
   </div>
 </form>
 
