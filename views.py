@@ -27,19 +27,6 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 app = Flask(__name__)
 
-# Create a state token to prevent request forgery.
-# Store it in the session for later validation.
-@app.route('/login')
-def showLogin():
-    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
-                    for x in xrange(32))
-    login_session['state'] = state
-    # If a user is logged in, get current user info
-    current_user = {}
-    if 'username' in login_session:
-        getCurrentUserInfo(current_user)
-    return render_template('login.html', STATE=state, CLIENT_ID=CLIENT_ID, current_user=current_user)
-
 
 def getUserID(email):
     try:
@@ -48,10 +35,15 @@ def getUserID(email):
     except:
         return None
 
+# Helper functions
+# Find User info among users already in db
+
 
 def getUserInfo(user_id):
     user = session.query(User).filter_by(id=user_id).one()
     return user
+
+# Create a new user
 
 
 def createUser(login_session):
@@ -62,6 +54,8 @@ def createUser(login_session):
     user = session.query(User).filter_by(email=login_session['email']).one()
     return user.id
 
+# Get currently logged in user's info
+
 
 def getCurrentUserInfo(current_user):
     # Get all current user's info
@@ -71,10 +65,26 @@ def getCurrentUserInfo(current_user):
     current_user['id'] = login_session['user_id']
     return current_user
 
+
+# Login page
+@app.route('/login')
+def showLogin():
+    # Create a state token to prevent request forgery.
+    # Store it in the session for later validation.
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                    for x in xrange(32))
+    login_session['state'] = state
+    # If a user is logged in, get current user info
+    current_user = {}
+    if 'username' in login_session:
+        getCurrentUserInfo(current_user)
+    return render_template('login.html', STATE=state, CLIENT_ID=CLIENT_ID, current_user=current_user)
+
+
 # GConnect
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-  # Validate state token
+    # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'appplication/json'
@@ -105,7 +115,7 @@ def gconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    # Verify that the access is used for the indended user.
+    # Verify that the access is used for the intended user.
     gplus_id = credentials.id_token['sub']
     if result['user_id'] != gplus_id:
         response = make_response(json.dumps(
@@ -152,17 +162,17 @@ def gconnect():
         print('New User Created!')
     else:
         print('User Already Exists')
-        # login_session['user_id'] = user_id
-        # user_info = getUserInfo(user_id)
-        # print('User Found!')
+        login_session['user_id'] = user_id
+        user_info = getUserInfo(user_id)
+        print('User Found!')
     output = ''
     output += '<p>Welcome, '
     output += login_session['username']
     output += '!</p>'
-    output += '<img src="'
-    output += login_session['picture']
-    output += ' " style = "width: 200px; height: 200px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    flash("you are now logged in as %s" % login_session['username'])
+    # output += '<img src="'
+    # output += login_session['picture']
+    # output += ' " style = "width: 200px; height: 200px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    flash("You are now logged in as %s" % login_session['username'])
     print("Login completed")
     return output
 # End of gconnect
@@ -171,8 +181,8 @@ def gconnect():
 # DISCONNECT - Revoke a current user's token and reset their login_session.
 @app.route("/gdisconnect")
 def gdisconnect():
-  # Only disconnect a connected user.
-  # Check if a user is connected.
+    # Only disconnect a connected user.
+    # Check if a user is connected.
     try:
         access_token = login_session['access_token']
     except KeyError:
@@ -182,6 +192,7 @@ def gdisconnect():
             'Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
+
     # Execute HTTP GET request to revoke current token.
     url = "https://accounts.google.com/o/oauth2/revoke?token=%s" % access_token
     h = httplib2.Http()
@@ -214,21 +225,26 @@ def categoriesJSON():
     categories = session.query(Category).all()
     return jsonify(categories=[c.serialize for c in categories])
 
+
 # API for colors
 @app.route('/colors/JSON')
 def colorsJSON():
     colors = session.query(Color).all()
     return jsonify(colors=[c.serialize for c in colors])
 
+
 # Show main page
 @app.route('/')
 @app.route('/categories')
 def showCategories():
+    # Find all categories
     categories = session.query(Category).all()
     for category in categories:
+        # Get all the colors for each categories (to be displayed in the card)
         colors = session.query(Color).filter_by(
             category_id=category.id).all()
         category.all_colors = colors
+        # Get the creator (to be displayed in the card)
         creator = session.query(User).filter_by(
             id=category.user_id).one()
         category.creator = creator.name
@@ -238,6 +254,7 @@ def showCategories():
         getCurrentUserInfo(current_user)
     return render_template('categories.html', categories=categories, current_user=current_user)
 
+
 # Show all colors belonging to a category
 @app.route('/category/<int:category_id>/', methods=['GET', 'POST'])
 def showColors(category_id):
@@ -246,7 +263,7 @@ def showColors(category_id):
         category_id=category_id).all()
     # get info about the user, if logged in
     creator = getUserInfo(category.user_id)
-   # If a user is logged in, get current user info
+    # If a user is logged in, get current user info
     current_user = {}
     if 'username' in login_session:
         getCurrentUserInfo(current_user)
@@ -256,6 +273,7 @@ def showColors(category_id):
         # Else, return a page where s/he can fully edit the category
     else:
         return render_template('colorsPerCategory.html', category=category, colors=colors, creator=creator, current_user=current_user)
+
 
 # Create a new category
 @app.route('/category/new/', methods=['GET', 'POST'])
@@ -279,6 +297,7 @@ def newCategory():
     else:
         return render_template('newCategory.html', current_user=current_user)
 
+
 # Edit a category
 @app.route('/category/<int:category_id>/edit/', methods=['GET', 'POST'])
 def editCategory(category_id):
@@ -291,8 +310,10 @@ def editCategory(category_id):
     current_user = {}
     if 'username' in login_session:
         getCurrentUserInfo(current_user)
+    # If the user logged in isn't the creator of the category, give alert
     if editedCategory.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to edit this category.');}</script><body onload='myFunction()''>"
+    # If a request is sent, edit category
     if request.method == 'POST':
         if request.form['name']:
             editedCategory.name = request.form['name']
@@ -300,6 +321,7 @@ def editCategory(category_id):
             return redirect(url_for('showCategories'))
     else:
         return render_template('editCategory.html', category=editedCategory, current_user=current_user)
+
 
 # Delete a category
 @app.route('/category/<int:category_id>/delete/', methods=['GET', 'POST'])
@@ -313,8 +335,10 @@ def deleteCategory(category_id):
     current_user = {}
     if 'username' in login_session:
         getCurrentUserInfo(current_user)
+    # If the user logged in isn't the creator of the category, give alert
     if categoryToDelete.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to delete this category.');}</script><body onload='myFunction()''>"
+    # If a request is sent, delete category
     if request.method == 'POST':
         # Delete all colors inside of the category.
         # This will prevent these color to be reassigned by a new category
@@ -331,17 +355,19 @@ def deleteCategory(category_id):
     else:
         return render_template('deleteCategory.html', category=categoryToDelete, current_user=current_user)
 
+
 # Create a new color
 @app.route('/category/<int:category_id>/color/new/', methods=['GET', 'POST'])
 def newColor(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
-    # Chceck if a user is logged in
+    # Check if a user is logged in
     if 'username' not in login_session:
         return redirect('/login')
     # If a user is logged in, get current user info
     current_user = {}
     if 'username' in login_session:
         getCurrentUserInfo(current_user)
+    # If a request is sent, add new color
     if request.method == 'POST':
         newColor = Color(name=request.form['name'], hex_code=request.form['hex_code'],
                          rgb_code="RGB(" + request.form['r'] + ", " + request.form['g'] + ", " + request.form['b'] + ")", category_id=category_id, user_id=category.user_id)
@@ -351,6 +377,7 @@ def newColor(category_id):
         return redirect(url_for('showColors', category_id=category_id))
     else:
         return render_template('newColor.html', category_id=category_id, current_user=current_user)
+
 
 # Edit a color
 @app.route('/category/<int:category_id>/color/<int:color_id>/edit', methods=['GET', 'POST'])
@@ -363,6 +390,7 @@ def editColor(category_id, color_id):
     current_user = {}
     if 'username' in login_session:
         getCurrentUserInfo(current_user)
+    # If a request is sent, edit color
     if request.method == 'POST':
         if request.form['name']:
             editedColor.name = request.form['name']
@@ -375,6 +403,7 @@ def editColor(category_id, color_id):
         flash('Color %s Successfully Edited' % editedColor.name)
         return redirect(url_for('showColors', category_id=category_id))
     else:
+        # Convert rgb code from string to single numbers
         rgbTuple = editedColor.rgb_code[4:len(
             editedColor.rgb_code)-1].split(",")
         r = int(rgbTuple[0])
@@ -387,13 +416,14 @@ def editColor(category_id, color_id):
 @app.route('/category/<int:category_id>/color/<int:color_id>/delete', methods=['GET', 'POST'])
 def deleteColor(category_id, color_id):
     colorToDelete = session.query(Color).filter_by(id=color_id).one()
-    # Chceck if a user is logged in
+    # Check if a user is logged in
     if 'username' not in login_session:
         return redirect('/login')
     # If a user is logged in, get current user info
     current_user = {}
     if 'username' in login_session:
         getCurrentUserInfo(current_user)
+    # If a request is sent, delete color
     if request.method == 'POST':
         session.delete(colorToDelete)
         session.commit()

@@ -65,7 +65,6 @@
   $("#signinButton").click(function() {
     function signInCallback(authResult) {
       if (authResult["code"]) {
-        // $("#signinButton").attr("style", "display: none");
         $("#signinButton").text("Signed in");
         $.ajax({
           type: "POST",
@@ -86,7 +85,6 @@
           data: authResult["code"]
         });
       } else {
-        // handle error
         console.log("There was an error: " + authResult["error"]);
         $("#result").html(
           "Failed to make a server-side call. Check your configuration and console."
@@ -98,24 +96,6 @@
 </script>
 <!-- LOGOUT -->
 <script>
-  // function signOut() {
-  //   $.ajax({
-  //     type: "PUT",
-  //     url: "/gdisconnect?state={{STATE}}",
-  //     headers: {
-  //       "X-Requested-With": "XMLHttpRequest"
-  //     },
-  //     contentType: "application/octet-stream; charset=utf-8",
-  //     success: function(result) {
-  //       $("#result").html(
-  //         "Logout Successful!</br>" + result + "</br>Redirecting..."
-  //       );
-  //       setTimeout(function() {
-  //         window.location.href = "/";
-  //       }, 2000);
-  //     }
-  //   });
-  // }
   function signOut() {
     var auth2 = gapi.auth2.getAuthInstance();
     auth2

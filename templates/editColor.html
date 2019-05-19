@@ -13,9 +13,9 @@
 					<fieldset class="form-input__rgb">
 						<legend>RGB code:</legend>
 						rgb (
-						<input class="form-input--number" required id="r" type="number" min="0" max="255" step="1" value="{{r}}" name="r" oninput="applyRgb()">,
-						<input class="form-input--number" required id="g" type="number" min="0" max="255" step="1" value="{{g}}" name="g" oninput="applyRgb()">,
-						<input class="form-input--number" required id="b" type="number" min="0" max="255" step="1" value="{{b}}" name="b" oninput="applyRgb()">
+						<input class="form-input--number" required id="r" type="number" min="0" max="255" step="1" value="{{r}}" name="r" oninput="checkRgbValues()">,
+						<input class="form-input--number" required id="g" type="number" min="0" max="255" step="1" value="{{g}}" name="g" oninput="checkRgbValues()">,
+						<input class="form-input--number" required id="b" type="number" min="0" max="255" step="1" value="{{b}}" name="b" oninput="checkRgbValues()">
 						)
 					</fieldset>
 				</div>
@@ -33,110 +33,6 @@
 					</a>
 				</div>
 			</form>
-					<script>
-							
-							// Get all fields value
-							const hexCode = document.getElementById("hexCode");
-							const r = document.getElementById("r");
-							const g = document.getElementById("g");
-							const b = document.getElementById("b");
-							const previewBox = document.getElementById("previewBox");
-							const palette = document.getElementById("palette");
-
-							// IF PALETTE CHANGES
-							// Once palette changes, change first hexCode, then rgb code
-							function applyPalette() {
-								hexCode.value = palette.value;
-								changeRgbWithHex(hexCode.value);
-							}
-							// Event listener for palette
-							palette.addEventListener("change", applyPalette);
-
-							// IF RGB CODE CHANGES
-							// Once any of the rgb values changes, 
-							// validate them, 
-							// change hex color field, 
-							// change preview background
-							// and change palette			
-							function applyRgb() {
-								r.value = checkRgbFields(r.value);
-								g.value = checkRgbFields(g.value);
-								b.value = checkRgbFields(b.value);
-								hexCode.value = "#" + componentToHex(r.value) + componentToHex(g.value) + componentToHex(b.value);
-								previewBox.style.background = `rgb(${r.value},${g.value},${b.value})`;
-								palette.value = palette.value = hexCode.value;
-							}
-							// Helper function to validate rgb fields upon input
-							function checkRgbFields(value) {
-								if (value<0) {
-									return 0;
-								}
-								else if (value>255) {
-									return 255;
-								}
-								else {
-									return parseInt(value);
-								}
-							}
-							// Helper function to convert rgb components to hex
-							function componentToHex(c) {
-								if(!c) {
-									c = 0;
-								}
-    						const hex = parseInt(c).toString(16);
-    						return hex.length == 1 ? "0" + hex : hex;
-							}
-							// Function that checks if rgb values are <0 or nonexistent, and fixes them
-							function fixRgbNull(event){
-								if(!event.target.value || event.target.value < 0) {
-									event.target.value = 0;
-									return event.target.value;
-								}
-							}
-							// Event listeners for rgb
-							r.addEventListener("focusout",()=>fixRgbNull(event))
-							g.addEventListener("focusout",()=>fixRgbNull(event))
-							b.addEventListener("focusout",()=>fixRgbNull(event))
-
-
-							// IF HEX CODE CHANGES
-							// Once hex code is entered, first change the preview background
-							function applyHex (value) {
-								const isValidHexCode  = /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(value);
-								if (isValidHexCode) {
-									changePreviewWithHex(value);
-									changeRgbWithHex(value);
-									changePaletteWithHex(value);
-								}
-							}
-							function changePreviewWithHex (value) {
-							// Check that the string is a valid hex code
-								previewBox.style.background = value
-								// If the shorthand version of the hexcode is used, convert it into the long version
-								if (value.length<5)  {
-									let previewBoxRgb = previewBox.style.background;
-									let rgbArray = previewBoxRgb.slice(4, previewBoxRgb.length-1).split(",");
-									hexCode.value = "#" + componentToHex(parseInt(rgbArray[0])) + componentToHex(parseInt(rgbArray[1])) + componentToHex(parseInt(rgbArray[2]));									}
-							}
-							// Once hex code is entered, update the rgb fields 
-							function changeRgbWithHex(value) {
-									r.value = hexToR(value);
-									g.value = hexToG(value);
-									b.value = hexToB(value);
-							}
-							// Helper functions to convert hex into rgb
-							function hexToR(h) {return parseInt((cutHex(h)).substring(0,2),16)}
-							function hexToG(h) {return parseInt((cutHex(h)).substring(2,4),16)}
-							function hexToB(h) {return parseInt((cutHex(h)).substring(4,6),16)}
-							function cutHex(h) {return (h.charAt(0)=="#") ? h.substring(1,7):h}
-							// Change palette with hex
-							function changePaletteWithHex(value) {
-								palette.value = value;
-							}
-
-							// Event listeners
-							hexCode.addEventListener("change",  () =>{ applyHex(event.target.value)})							
-
-						</script>
-
+			<script src="{{ url_for('static', filename='colorForm.js')}}"
+			></script>
 {% endblock %}
