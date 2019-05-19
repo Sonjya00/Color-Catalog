@@ -28,6 +28,7 @@ session = DBSession()
 app = Flask(__name__)
 
 
+# Find User info among users already in db (email)
 def getUserID(email):
     try:
         user = session.query(User).filter_by(email=email).one()
@@ -35,17 +36,14 @@ def getUserID(email):
     except:
         return None
 
-# Helper functions
-# Find User info among users already in db
 
-
+# Find User info among users already in db (id)
 def getUserInfo(user_id):
     user = session.query(User).filter_by(id=user_id).one()
     return user
 
+
 # Create a new user
-
-
 def createUser(login_session):
     newUser = User(name=login_session['username'],
                    email=login_session['email'], picture=login_session['picture'])
@@ -54,16 +52,20 @@ def createUser(login_session):
     user = session.query(User).filter_by(email=login_session['email']).one()
     return user.id
 
-# Get currently logged in user's info
 
-
-def getCurrentUserInfo(current_user):
-    # Get all current user's info
-    current_user['username'] = login_session['username']
-    current_user['picture'] = login_session['picture']
-    current_user['email'] = login_session['email']
-    current_user['id'] = login_session['user_id']
-    return current_user
+# Get currently logged in user's info,
+# or return None if no user is logged in
+def getCurrentUserInfo():
+    # Chck if a user is logged in
+    if 'username' in login_session:
+        current_user = {}
+        current_user['username'] = login_session['username']
+        current_user['picture'] = login_session['picture']
+        current_user['email'] = login_session['email']
+        current_user['id'] = login_session['user_id']
+        return current_user
+    else:
+        return None
 
 
 # Login page
@@ -74,10 +76,8 @@ def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
-    # If a user is logged in, get current user info
-    current_user = {}
-    if 'username' in login_session:
-        getCurrentUserInfo(current_user)
+    # Get current user info
+    current_user = getCurrentUserInfo()
     return render_template('login.html', STATE=state, CLIENT_ID=CLIENT_ID, current_user=current_user)
 
 
@@ -248,10 +248,8 @@ def showCategories():
         creator = session.query(User).filter_by(
             id=category.user_id).one()
         category.creator = creator.name
-    # If a user is logged in, get current user info
-    current_user = {}
-    if 'username' in login_session:
-        getCurrentUserInfo(current_user)
+    # Get current user info
+    current_user = getCurrentUserInfo()
     return render_template('categories.html', categories=categories, current_user=current_user)
 
 
@@ -263,10 +261,8 @@ def showColors(category_id):
         category_id=category_id).all()
     # get info about the user, if logged in
     creator = getUserInfo(category.user_id)
-    # If a user is logged in, get current user info
-    current_user = {}
-    if 'username' in login_session:
-        getCurrentUserInfo(current_user)
+    # Get current user info
+    current_user = getCurrentUserInfo()
     # If a user is not logged in, or the user logged in isn't the creator, return the public page
     if 'username' not in login_session or creator.id != login_session['user_id']:
         return render_template('colorsPerCategoryPublic.html', colors=colors, category=category, creator=creator, current_user=current_user)
@@ -278,14 +274,12 @@ def showColors(category_id):
 # Create a new category
 @app.route('/category/new/', methods=['GET', 'POST'])
 def newCategory():
-    # If a user isn't logged in, it isn't possible to make a new category,
-    # so redirect to login page
-    if 'username' not in login_session:
+    # Get current user info
+    current_user = getCurrentUserInfo()
+    # If there is no user logged in, redirect to login page
+    if current_user == None:
+        flash("You are not allowed to access there")
         return redirect('/login')
-    # If a user is logged in, get current user info
-    current_user = {}
-    if 'username' in login_session:
-        getCurrentUserInfo(current_user)
     # If a request is sent, add a new category
     if request.method == 'POST':
         newCategory = Category(
@@ -301,15 +295,15 @@ def newCategory():
 # Edit a category
 @app.route('/category/<int:category_id>/edit/', methods=['GET', 'POST'])
 def editCategory(category_id):
+    # Get current user info
+    current_user = getCurrentUserInfo()
+    # If there is no user logged in, redirect to login page
+    if current_user == None:
+        flash("You are not allowed to access there")
+        return redirect('/login')
+    # Find category to edit
     editedCategory = session.query(
         Category).filter_by(id=category_id).one()
-    # Check if username is logged in, and if it is the same as the cretor of the category
-    if 'username' not in login_session:
-        return redirect('/login')
-    # If a user is logged in, get current user info
-    current_user = {}
-    if 'username' in login_session:
-        getCurrentUserInfo(current_user)
     # If the user logged in isn't the creator of the category, give alert
     if editedCategory.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to edit this category.');}</script><body onload='myFunction()''>"
@@ -326,15 +320,15 @@ def editCategory(category_id):
 # Delete a category
 @app.route('/category/<int:category_id>/delete/', methods=['GET', 'POST'])
 def deleteCategory(category_id):
+    # Get current user info
+    current_user = getCurrentUserInfo()
+    # If there is no user logged in, redirect to login page
+    if current_user == None:
+        flash("You are not allowed to access there")
+        return redirect('/login')
+    # Find category to delete
     categoryToDelete = session.query(
         Category).filter_by(id=category_id).one()
-    # Check if username is logged in, and if it is the same as the cretor of the category
-    if 'username' not in login_session:
-        return redirect('/login')
-    # If a user is logged in, get current user info
-    current_user = {}
-    if 'username' in login_session:
-        getCurrentUserInfo(current_user)
     # If the user logged in isn't the creator of the category, give alert
     if categoryToDelete.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to delete this category.');}</script><body onload='myFunction()''>"
@@ -359,14 +353,14 @@ def deleteCategory(category_id):
 # Create a new color
 @app.route('/category/<int:category_id>/color/new/', methods=['GET', 'POST'])
 def newColor(category_id):
-    category = session.query(Category).filter_by(id=category_id).one()
-    # Check if a user is logged in
-    if 'username' not in login_session:
+    # Get current user info
+    current_user = getCurrentUserInfo()
+    # If there is no user logged in, redirect to login page
+    if current_user == None:
+        flash("You are not allowed to access there")
         return redirect('/login')
-    # If a user is logged in, get current user info
-    current_user = {}
-    if 'username' in login_session:
-        getCurrentUserInfo(current_user)
+    # Find category which the color will belong to
+    category = session.query(Category).filter_by(id=category_id).one()
     # If a request is sent, add new color
     if request.method == 'POST':
         newColor = Color(name=request.form['name'], hex_code=request.form['hex_code'],
@@ -382,14 +376,14 @@ def newColor(category_id):
 # Edit a color
 @app.route('/category/<int:category_id>/color/<int:color_id>/edit', methods=['GET', 'POST'])
 def editColor(category_id, color_id):
-    editedColor = session.query(Color).filter_by(id=color_id).one()
-    # Chceck if a user is logged in
-    if 'username' not in login_session:
+    # Get current user info
+    current_user = getCurrentUserInfo()
+    # If there is no user logged in, redirect to login page
+    if current_user == None:
+        flash("You are not allowed to access there")
         return redirect('/login')
-    # If a user is logged in, get current user info
-    current_user = {}
-    if 'username' in login_session:
-        getCurrentUserInfo(current_user)
+    # Find category which the edited color belongs to
+    editedColor = session.query(Color).filter_by(id=color_id).one()
     # If a request is sent, edit color
     if request.method == 'POST':
         if request.form['name']:
@@ -415,15 +409,14 @@ def editColor(category_id, color_id):
 # Delete a color
 @app.route('/category/<int:category_id>/color/<int:color_id>/delete', methods=['GET', 'POST'])
 def deleteColor(category_id, color_id):
-    colorToDelete = session.query(Color).filter_by(id=color_id).one()
-    # Check if a user is logged in
-    if 'username' not in login_session:
+    # Get current user info
+    current_user = getCurrentUserInfo()
+    # If there is no user logged in, redirect to login page
+    if current_user == None:
+        flash("You are not allowed to access there")
         return redirect('/login')
-    # If a user is logged in, get current user info
-    current_user = {}
-    if 'username' in login_session:
-        getCurrentUserInfo(current_user)
-    # If a request is sent, delete color
+    # Find category which the deleted color belongs to
+    colorToDelete = session.query(Color).filter_by(id=color_id).one()
     if request.method == 'POST':
         session.delete(colorToDelete)
         session.commit()
